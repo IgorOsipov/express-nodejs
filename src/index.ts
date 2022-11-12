@@ -1,13 +1,43 @@
+import { reverse } from 'dns'
 import express from 'express'
 
 const app = express()
 const port = 3000
 
-app.get('/', (req, res) => {
-    res.send('Hello World')
+const db = {
+    users: [
+        {id: 8, name: 'Igor'},
+        {id: 2, name: `${ [..."ahsaM"].reverse().join('') }`},
+        {id: 3, name: 'Boris'},
+        {id: 4, name: 'Maxim'},
+        {id: 5, name: 'Ivan'},
+        {id: 6, name: 'Inna'},
+        {id: 7, name: 'Baba'},
+        {id: 1, name: 'James'},
+    ]
+}
+
+app.get('/users', (req, res) => {
+    const sortedUsers = db.users.sort((a, b) => {
+        if (req.query.sortBy === 'name') {
+           return a[req.query.sortBy] > b[req.query.sortBy] ? 1 : b[req.query.sortBy] > a[req.query.sortBy] ? -1 : 0;
+        }
+        else if(req.query.sortBy === 'id'){
+            return a[req.query.sortBy] > b[req.query.sortBy] ? 1 : b[req.query.sortBy] > a[req.query.sortBy] ? -1 : 0;
+        }
+        else{
+            return 0;
+        }
+    })
+    res.json(sortedUsers)
+})
+
+app.get('/users/:id', (req, res) => {
+    const user = db.users.find( u => u.id === +req.params.id);
+    if(!user) return res.send(404)
+    res.json(user)
 })
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`Listening port ${port}`)
 })
-
