@@ -4,6 +4,9 @@ import express from 'express'
 const app = express()
 const port = 3000
 
+const jsonBody = express.json();
+app.use(jsonBody)
+
 const db = {
     users: [
         {id: 8, name: 'Igor'},
@@ -40,6 +43,15 @@ app.get('/users/:id', (req, res) => {
     const user = db.users.find( u => u.id === +req.params.id);
     if(!user) return res.send(404)
     res.json(user)
+})
+
+app.post('/users', (req, res) => {
+    const newUser = {
+        id: +(new Date()),
+        name: req.body.name ? req.body.name : 'Unknown'
+    }
+    db.users.push(newUser)
+    res.json(newUser)
 })
 
 app.listen(port, () => {
