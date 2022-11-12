@@ -19,17 +19,21 @@ const db = {
 
 app.get('/users', (req, res) => {
     const sortedUsers = db.users.sort((a, b) => {
-        if (req.query.sortBy === 'name') {
+        if 
+        (
+            req.query.sortBy === 'name' || 
+            req.query.sortBy === 'id'
+        ) {
            return a[req.query.sortBy] > b[req.query.sortBy] ? 1 : b[req.query.sortBy] > a[req.query.sortBy] ? -1 : 0;
-        }
-        else if(req.query.sortBy === 'id'){
-            return a[req.query.sortBy] > b[req.query.sortBy] ? 1 : b[req.query.sortBy] > a[req.query.sortBy] ? -1 : 0;
         }
         else{
             return 0;
         }
     })
-    res.json(sortedUsers)
+    const filteredSortedUsers = req.query.name
+    ? sortedUsers.filter(u => u.name.indexOf(req.query.name as string) > -1) 
+    : sortedUsers
+    res.json(filteredSortedUsers)
 })
 
 app.get('/users/:id', (req, res) => {
