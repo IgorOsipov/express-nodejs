@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "tsc -w",
     "watch": "nodemon --inspect ./dist/index.js",
-    "dev": "conc --kill-others start \"yarn run compile\" \"yarn run watch\""
+    "dev": "conc --kill-others \"yarn run compile\" \"yarn run watch\""
   },
   "dependencies": {
     "express": "^4.18.2"
