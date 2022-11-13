@@ -50,7 +50,7 @@ app.post('/users', (req, res) => {
         name: req.body.name ? req.body.name : 'Unknown'
     }
     db.users.push(newUser)
-    res.json(newUser)
+    res.status(201).json(newUser)
 })
 
 app.delete('/users/:id', (req, res) => {
@@ -59,7 +59,7 @@ app.delete('/users/:id', (req, res) => {
         ? res.sendStatus(404)
         : db.users.splice(delIndex, 1)
     db.users = db.users.filter( u => u.id !== +req.params.id);
-    res.json(db.users)
+    res.status(204).json(db.users)
 })
 
 app.put('/users/:id', (req, res) => {
