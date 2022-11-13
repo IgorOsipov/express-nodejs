@@ -1,4 +1,3 @@
-import { reverse } from 'dns'
 import express from 'express'
 
 const app = express()
@@ -10,7 +9,7 @@ app.use(jsonBody)
 const db = {
     users: [
         {id: 8, name: 'Igor'},
-        {id: 2, name: `${ [..."ahsaM"].reverse().join('') }`},
+        {id: 2, name: 'Masha'},
         {id: 3, name: 'Boris'},
         {id: 4, name: 'Maxim'},
         {id: 5, name: 'Ivan'},
