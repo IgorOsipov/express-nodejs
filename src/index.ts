@@ -54,6 +54,15 @@ app.post('/users', (req, res) => {
     res.json(newUser)
 })
 
+app.delete('/users/:id', (req, res) => {
+    const delIndex = db.users.findIndex(u => u.id === +req.params.id)
+    delIndex === -1 
+        ? res.status(204)
+        : db.users.splice(delIndex, 1)
+    db.users = db.users.filter( u => u.id !== +req.params.id);
+    res.json(db.users)
+})
+
 app.listen(port, () => {
     console.log(`Listening port ${port}`)
 })
