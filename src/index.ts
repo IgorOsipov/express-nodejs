@@ -57,10 +57,19 @@ app.post('/users', (req, res) => {
 app.delete('/users/:id', (req, res) => {
     const delIndex = db.users.findIndex(u => u.id === +req.params.id)
     delIndex === -1 
-        ? res.status(204)
+        ? res.sendStatus(404)
         : db.users.splice(delIndex, 1)
     db.users = db.users.filter( u => u.id !== +req.params.id);
     res.json(db.users)
+})
+
+app.put('/users/:id', (req, res) => {
+    if(!req.body.name) res.sendStatus(400)
+    const index = db.users.findIndex(u => u.id === +req.params.id)
+    index === -1 
+        ? res.sendStatus(404)
+        : db.users[index].name = req.body.name
+    res.json(db.users[index])
 })
 
 app.listen(port, () => {
