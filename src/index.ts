@@ -1,12 +1,16 @@
-import express from 'express'
+import express, {Request, Response} from 'express'
+import { UsersGetModel } from './models/UsersGetModel'
+import { UserCreateModel } from './models/UserCreateModel'
+import { UserUpdateModel } from './models/UserUpdateModel'
+import { RequestWithParams, RequestWithQuery, RequestWithBody, RequestWithBodyAndParams } from './types'
 
 export const app = express()
 const port = 3000
 
-const jsonBody = express.json();
+const jsonBody = express.json()
 app.use(jsonBody)
 
-const db = {
+const db: {users: UserType[]} = {
     users: [
         {id: 8, name: 'Igor'},
         {id: 2, name: 'Masha'},
@@ -19,7 +23,12 @@ const db = {
     ]
 }
 
-app.get('/users', (req, res) => {
+type UserType = {
+    id: number
+    name: string
+}
+
+app.get('/users', (req: RequestWithQuery<UsersGetModel>, res: Response<UserType[]>) => {
     const sortedUsers = db.users.sort((a, b) => {
         if 
         (
@@ -38,13 +47,13 @@ app.get('/users', (req, res) => {
     res.json(filteredSortedUsers)
 })
 
-app.get('/users/:id', (req, res) => {
+app.get('/users/:id', (req: RequestWithParams<{id: string}>, res) => {
     const user = db.users.find( u => u.id === +req.params.id);
     if(!user) return res.send(404)
     res.json(user)
 })
 
-app.post('/users', (req, res) => {
+app.post('/users', (req: RequestWithBody<UserCreateModel>, res: Response<UserType>) => {
     const newUser = {
         id: +(new Date()),
         name: req.body.name ? req.body.name : 'Unknown'
@@ -53,7 +62,7 @@ app.post('/users', (req, res) => {
     res.status(201).json(newUser)
 })
 
-app.delete('/users/:id', (req, res) => {
+app.delete('/users/:id', (req: RequestWithParams<{id: string}>, res) => {
     const delIndex = db.users.findIndex(u => u.id === +req.params.id)
     delIndex === -1 
         ? res.sendStatus(404)
@@ -62,7 +71,7 @@ app.delete('/users/:id', (req, res) => {
     res.status(204).json(db.users)
 })
 
-app.put('/users/:id', (req, res) => {
+app.put('/users/:id', (req: RequestWithBodyAndParams<{id: string}, UserUpdateModel>, res) => {
     if(!req.body.name) res.sendStatus(400)
     const index = db.users.findIndex(u => u.id === +req.params.id)
     index === -1 
