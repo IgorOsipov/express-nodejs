@@ -1,6 +1,6 @@
 import express from 'express'
 
-const app = express()
+export const app = express()
 const port = 3000
 
 const jsonBody = express.json();
@@ -69,6 +69,11 @@ app.put('/users/:id', (req, res) => {
         ? res.sendStatus(404)
         : db.users[index].name = req.body.name
     res.json(db.users[index])
+})
+
+app.delete('/__test__/data', (req, res) => {
+    db.users = []
+    res.sendStatus(200)
 })
 
 app.listen(port, () => {
